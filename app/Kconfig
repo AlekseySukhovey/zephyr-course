@@ -3,6 +3,11 @@ menuconfig LED_SUBSYSTEM
 	default y
 
 if LED_SUBSYSTEM
+			config APP_HEARTBEAT_PERIOD_MS 
+				int "Sleep duration (ms)" 
+				range 100 2000 
+				default 500
+
 	#choice for blink sleep time (250ms, 500ms, 1s, 2s) with hidden int symbol
 	choice
 		prompt "LED blink sleep time"

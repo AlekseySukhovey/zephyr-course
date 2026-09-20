@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.0)
 
-set(BOARD our_board)
+# set(BOARD our_board)
 # set(BOARD_FLASH_RUNNER jlink)
 
 

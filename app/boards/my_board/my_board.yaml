@@ -1,0 +1,15 @@
+identifier: my_board
+name: My_Board Development Board
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 192
+flash: 512
+supported:
+  - can
+  - pwm
+  - counter
+  - spi
+  - gpio

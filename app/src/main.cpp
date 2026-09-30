@@ -1,30 +1,41 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/drivers/sensor.h>
 
 #define SLEEP_TIME_MS 1000
 
-/* The devicetree node identifier for the "app-led" alias. */
-#define LED_NODE DT_ALIAS(app_led)
+// /* The devicetree node identifier for the "app-led" alias. */
+// #define LED_NODE DT_ALIAS(app_led)
 
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED_NODE, gpios);
+// static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED_NODE, gpios);
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
-int main(void)
-{
-    bool led_state = true;
+namespace {
+    void turn_on_led() {
+        const struct device *driver = DEVICE_DT_GET(DT_NODELABEL(our_driver0));
+        struct sensor_value val;
+        auto ret = sensor_sample_fetch(driver);
+        LOG_INF("Channel ret: %d\n", ret);
+    }
 
-    if (!gpio_is_ready_dt(&led)) return 0;
+    void turn_off_led() {
+        const struct device *driver = DEVICE_DT_GET(DT_NODELABEL(our_driver0));
+        struct sensor_value val;
+        auto ret = sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
+        LOG_INF("Channel ret: %d\n", ret);
+    }
+}
 
-    if (gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE) < 0) return 0;
-
+int main(void) {
     while (1) {
-        if (gpio_pin_toggle_dt(&led) < 0) return 0;
+        turn_on_led();
+        k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
 
-        led_state = !led_state;
-        LOG_INF("LED state: %s", led_state ? "ON" : "OFF");
+        turn_off_led();
         k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
     }
+
     return 0;
 }

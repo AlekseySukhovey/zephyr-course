@@ -1,10 +1,11 @@
 #include <zephyr/drivers/sensor.h>
-#include <zephyr/drivers/gpio.h>
+//#include <zephyr/drivers/gpio.h>
 #include <zephyr/logging/log.h>
+#include "our_driver.h"
 
 #define DT_DRV_COMPAT our_driver
-#define LED_NODE DT_ALIAS(app_led)
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED_NODE, gpios);
+//#define LED_NODE DT_ALIAS(app_led)
+//static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED_NODE, gpios);
 
 LOG_MODULE_REGISTER(our_driver, LOG_LEVEL_INF);
 
@@ -26,6 +27,11 @@ static int channel_get_my_impl(const struct device *dev,
     if (gpio_pin_set_dt(&led, 0) < 0) return 0;
 
     return 0;
+}
+
+void toggle_led(uint32_t *counter) {
+    (*counter)++;
+    if (gpio_pin_toggle_dt(&led) < 0) return;
 }
 
 static DEVICE_API(sensor, api_iomico_lecture) = {

@@ -1,5 +1,6 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/sensor.h>
+#include "our_driver_task2.h"
 
 static int cmd_read_handler(const struct shell *sh, size_t argc, char **argv)
 {
@@ -61,16 +62,32 @@ static int cmd_info_handler(const struct shell *sh, size_t argc, char **argv)
         return -EFAULT;
     }
 
-    shell_info(sh, "Device Ready Status: %d", device_is_ready(dev));
+    shell_info(sh, "Device Ready Status: %d", dev->state->initialized);
+
+    return 0;
+}
+
+static int cmd_set_handler(const struct shell *sh, size_t argc, char **argv)
+{
+    uint8_t state = atoi(argv[1]);
+    if (state == 0 || state == 1)
+    {
+        set_led_state(state);
+    }
+    else
+    {
+        shell_error(sh, "Parameter value out of range, range: 0-1");
+    }
 
     return 0;
 }
 
 /* Create subcommand array for demo command */
 SHELL_STATIC_SUBCMD_SET_CREATE(our_driver_subcmd,
-                               SHELL_CMD_ARG(read, NULL, "Get channel of our driver", cmd_read_handler, 2, 0),   // 1: mandatory parameter, 0: optional parameters
-                               SHELL_CMD_ARG(fetch, NULL, "Get channel of our driver", cmd_fetch_handler, 2, 0), // 1: mandatory parameter, 0: optional parameters
-                               SHELL_CMD_ARG(info, NULL, "Get channel of our driver", cmd_info_handler, 2, 0),   // 1: mandatory parameter, 0: optional parameters
+                               SHELL_CMD_ARG(read, NULL, "Get channel of our driver (turn off LED)", cmd_read_handler, 2, 0),    // 2: mandatory, 0: optional parameters count
+                               SHELL_CMD_ARG(fetch, NULL, "Fetch channel of our driver (turn on LED)", cmd_fetch_handler, 2, 0), // 2: mandatory, 0: optional parameters count
+                               SHELL_CMD_ARG(info, NULL, "Show info of our sensor", cmd_info_handler, 2, 0),                     // 2: mandatory, 0: optional parameters count
+                               SHELL_CMD_ARG(set, NULL, "Turn on/off LED", cmd_set_handler, 2, 0),                               // 2: mandatory, 0: optional parameters count
                                SHELL_SUBCMD_SET_END);
 
 /* Register root command demo with sub commands */

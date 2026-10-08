@@ -1,4 +1,4 @@
-# Workspace map — 27 file(s)
+# Workspace map — 29 file(s)
 
 A map, not a substitute for reading. Paths are workspace-relative. Use read_file (with
 start_line/end_line) or search_files on these paths instead of re-listing directories.
@@ -25,9 +25,11 @@ boards/our_board/
   our_board.dts — devicetree / Kconfig overlay
   our_board.yaml
 drivers/our_driver/
-  CMakeList.txt
+  CMakeLists.txt — build definition
   Kconfig — devicetree / Kconfig overlay
+  our_driver_shell.c
   our_driver.c
+  our_driver.h — header
 modules/calculator/
   CMakeLists.txt — build definition
 modules/calculator/include/

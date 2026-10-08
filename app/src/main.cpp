@@ -41,7 +41,7 @@ int main(void) {
 
         toggle_led(&counter); // calling from our_driver.h interface, implemented in our_driver.c
         
-        LOG_INF("counter: %d\n", counter);
+        //LOG_INF("counter: %d\n", counter);
         k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
     }
 
